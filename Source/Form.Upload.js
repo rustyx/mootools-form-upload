@@ -101,7 +101,7 @@ Form.Upload = new Class({
 
 		self.reset = function() {
 			var files = inputFiles.getFiles();
-			for (var i = 0; i < files.length; i++){
+			for (var i = files.length - 1; i >= 0; i--){
 				inputFiles.remove(files[i]);
 			}
 		};
