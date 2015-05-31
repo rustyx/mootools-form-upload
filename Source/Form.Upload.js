@@ -24,7 +24,8 @@ Form.Upload = new Class({
 	options: {
 		dropMsg: 'Please drop your files here',
 		fireAtOnce: false,
-		onComplete: function(){
+		onRequest: function() {},
+		onComplete: function() {
 			// reload
 			window.location.href = window.location.href;
 		}
@@ -40,7 +41,7 @@ Form.Upload = new Class({
 		else this.legacyUpload(input);
 	},
 
-	modernUpload: function(input){
+	modernUpload: function(input) {
 
 		this.modern = true;
 
@@ -60,12 +61,15 @@ Form.Upload = new Class({
 
 		var uploadReq = new Request.File({
 			url: form.get('action'),
-			onRequest: progress.setStyles.pass({display: 'block', width: 0}, progress),
-			onProgress: function(event){
+			onRequest: function() {
+				progress.setStyles({display: 'block', width: 0});
+				self.fireEvent('request', Array.slice(arguments));
+			},
+			onProgress: function(event) {
 				var loaded = event.loaded, total = event.total;
 				progress.setStyle('width', parseInt(loaded / total * 100, 10).limit(0, 100) + '%');
 			},
-			onComplete: function(){
+			onComplete: function() {
 				progress.setStyle('width', '100%');
 				self.fireEvent('complete', Array.slice(arguments));
 				this.reset();
@@ -74,7 +78,7 @@ Form.Upload = new Class({
 
 		var inputname = input.get('name');
 
-		var  inputFiles = new Form.MultipleFileInput(input, list, drop, {
+		var inputFiles = new Form.MultipleFileInput(input, list, drop, {
 			onDragenter: drop.addClass.pass('hover', drop),
 			onDragleave: drop.removeClass.pass('hover', drop),
 			onDrop: function(){
