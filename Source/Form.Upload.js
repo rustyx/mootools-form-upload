@@ -67,7 +67,9 @@ Form.Upload = new Class({
 			},
 			onProgress: function(event) {
 				var loaded = event.loaded, total = event.total;
-				progress.setStyle('width', parseInt(loaded / total * 100, 10).limit(0, 100) + '%');
+				var loaded_percentage = parseInt(loaded / total * 100, 10).limit(0, 100);
+				progress.setStyle('width', loaded_percentage + '%');
+				progress.set('html', loaded_percentage + '%');
 			},
 			onComplete: function() {
 				progress.setStyle('width', '100%');
@@ -82,7 +84,7 @@ Form.Upload = new Class({
 			onDragenter: drop.addClass.pass('hover', drop),
 			onDragleave: drop.removeClass.pass('hover', drop),
 			onDrop: function(){
-				drop.removeClass.pass('hover', drop);
+				drop.removeClass('hover');
 				if (self.options.fireAtOnce){
 					self.submit(inputFiles, inputname, uploadReq);
 				}
