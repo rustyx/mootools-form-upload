@@ -96,7 +96,7 @@ Form.Upload = new Class({
 
 		form.addEvent('submit', function(event){
 			if (event) event.preventDefault();
-			self.submit(inputFiles, inputname, uploadReq);
+			self.submit(form, inputFiles, inputname, uploadReq);
 		});
 
 		self.reset = function() {
@@ -107,10 +107,26 @@ Form.Upload = new Class({
 		};
 	},
 
-	submit: function(inputFiles, inputname, uploadReq){
+	submit: function(form, inputFiles, inputname, uploadReq){
 		inputFiles.getFiles().each(function(file){
 			uploadReq.append(inputname , file);
 		});
+        var controls = form.getElementsByTagName('input');
+        for (var i=0, iLen=controls.length; i<iLen; i++) {
+        	if (controls[i].name != '') {
+	        	switch (controls[i].type) {
+	        	case 'file':
+	        	case 'button':
+	        		break;
+	        	case 'radio':
+	        	case 'checkbox':
+	            	uploadReq.append(controls[i].name, controls[i].checked ? 'on' : '');
+	            	break;
+	        	default:
+	        		uploadReq.append(controls[i].name, controls[i].value);
+	        	}
+        	}
+        }       
 		uploadReq.send();
 	},
 
