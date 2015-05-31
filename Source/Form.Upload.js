@@ -24,6 +24,8 @@ Form.Upload = new Class({
 	options: {
 		dropMsg: 'Please drop your files here',
 		fireAtOnce: false,
+		showSize: false,
+		showProgressPercentage: false,
 		onRequest: function() {},
 		onComplete: function() {
 			// reload
@@ -67,9 +69,10 @@ Form.Upload = new Class({
 			},
 			onProgress: function(event) {
 				var loaded = event.loaded, total = event.total;
-				var loaded_percentage = parseInt(loaded / total * 100, 10).limit(0, 100);
+				var loaded_percentage = total ? parseInt(loaded / total * 100, 10).limit(0, 100) : 100;
 				progress.setStyle('width', loaded_percentage + '%');
-				progress.set('html', loaded_percentage + '%');
+				if (self.options.showProgressPercentage)
+					progress.set('html', loaded_percentage + '%');
 			},
 			onComplete: function() {
 				progress.setStyle('width', '100%');
@@ -102,6 +105,7 @@ Form.Upload = new Class({
 		});
 
 		self.reset = function() {
+			progress.setStyle('display', 'none');
 			var files = inputFiles.getFiles();
 			for (var i = files.length - 1; i >= 0; i--){
 				inputFiles.remove(files[i]);

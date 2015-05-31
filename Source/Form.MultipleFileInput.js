@@ -22,7 +22,8 @@ Form.MultipleFileInput = new Class({
 	Implements: [Options, Events],
 
 	options: {
-		itemClass: 'uploadItem'/*,
+		itemClass: 'uploadItem',
+		showSize: false/*,
 		onAdd: function(file){},
 		onRemove: function(file){},
 		onEmpty: function(){},
@@ -99,7 +100,7 @@ Form.MultipleFileInput = new Class({
 		new Element('li', {
 			'class': this.options.itemClass
 		}).grab(new Element('span', {
-			text: file.name + " (" + this._format_file_size(file.size) + ")"
+			text: file.name + (self.options.showSize ? " (" + this._format_file_size(file.size) + ")" : "")
 		})).grab(new Element('a', {
 			text: 'x',
 			href: '#',
@@ -113,21 +114,17 @@ Form.MultipleFileInput = new Class({
 	},
 
 	_format_file_size: function(size){
-		var suffix = "KB";
-		if (size > 1024 * 1024) {
-			size = size / 1024;
-			suffix = 'MB';
+		var suffix = ' KB';
+		size /= 1024;
+		if (size >= 1024) {
+			size /= 1024;
+			suffix = ' MB';
 		}
-		if (size > 1024 * 1024) {
-			size = size / 1024;
-			suffix = 'GB';
+		if (size >= 1024) {
+			size /= 1024;
+			suffix = ' GB';
 		}
-
-		return (size / 1024).format({
-			decimal: ".",
-			decimals: 1,
-			suffix: " " + suffix
-		});
+		return size.toFixed(1) + suffix;
 	},
 
 	remove: function(file){
