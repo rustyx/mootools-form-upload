@@ -40,17 +40,18 @@ Request.File = new Class({
 	reset: function(){
 		this.formData = new FormData();
 	},
-
 	send: function(options){
 		if (!this.check(options)) return this;
 
 		this.options.isSuccess = this.options.isSuccess || this.isSuccess;
+
 		this.running = true;
 
 		var xhr = this.xhr;
 		if (progressSupport){
 			xhr.onloadstart = this.loadstart.bind(this);
 			xhr.onprogress = this.progress.bind(this);
+			xhr.upload.onFailure = this.progress.bind(this);
 			xhr.upload.onprogress = this.progress.bind(this);
 		}
 
