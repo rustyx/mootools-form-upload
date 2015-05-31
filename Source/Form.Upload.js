@@ -84,6 +84,7 @@ Form.Upload = new Class({
 		var inputname = input.get('name');
 
 		var inputFiles = new Form.MultipleFileInput(input, list, drop, {
+			showSize: self.options.showSize,
 			onDragenter: drop.addClass.pass('hover', drop),
 			onDragleave: drop.removeClass.pass('hover', drop),
 			onDrop: function(){
